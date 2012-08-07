@@ -1,0 +1,76 @@
+
+# Comet chat on PHP
+------------------
+
+## 1. I read following web site.
+----------------------------
+http://itpro.nikkeibp.co.jp/article/COLUMN/20080220/294242/
+http://www.webdesignlibrary.jp/2006/12/php_mysql_chat_sys.php
+
+
+## 2. set up
+----------
+### install followings
+emacs23
+apache2
+mysql-server
+libapache2-mod-auth-mysql
+libapache2-mod-php5
+php5-mysql
+
+## enable apache module rewrite
+`$ sudo a2enmod rewrite`
+
+`$ sudo apachectl restart`
+
+## set up database
+mysql> create database chatdb;
+mysql> use chatdb;
+mysql> create table chat(
+    -> pk INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    -> nick CHAR(24) NOT NULL,
+    -> words CHAR(150),
+    -> dt DATETIME
+    -> );
+mysql> create table user(
+    -> pk INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    -> room CHAR(24) NOT NULL,
+    -> nick CHAR(24) NOT NULL,
+    -> dt DATETIME
+    -> );
+
+
+## 3. install Smarty and setup
+---------------------------
+http://d.hatena.ne.jp/NiwaHirokazu/20090425/1240671703
+
+`$ sudo apt-get install smarty`
+where is smarty installed as
+`$ dpkg -L smarty`
+and find the directory
+`/usr/share/php/smarty/`
+
+
+setup /etc/php5/apache2/php.ini
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; Paths and Directories ;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; UNIX: "/path1:/path2"
+include_path = ".:/usr/share/php:/usr/share/php/smarty/"
+
+similarly set up /etc/php5/cli/php.ini as
+;;;;;;;;;;;;;;;;;;;;;;;;;
+; Paths and Directories ;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; UNIX: "/path1:/path2"
+include_path = ".:/usr/share/php:/usr/share/php/smarty/"
+;
+
+restart apache2
+`$sudo apachectl restart`
+
+check whether smarty works as
+`$ php -f smartytest.php`
+and if output nothing, it is OK.
