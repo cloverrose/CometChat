@@ -24,6 +24,7 @@ php5-mysql
 `$ sudo apachectl restart`
 
 ## set up database
+see http://github.com/cloverrose/CometChat/commit/f705cf646e76669bc2660426faddddb4227b7d7c and
 mysql> create database chatdb;
 mysql> use chatdb;
 mysql> create table chat(
