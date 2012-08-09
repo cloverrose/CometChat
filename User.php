@@ -66,7 +66,7 @@ class User{
     public function is_login($room, $nick){
         $sql = "SELECT * FROM $this->name WHERE room = '$room' and nick = '$nick' ORDER BY dt;";
         $result = $this->link->query($sql);
-        $row_cnt = $result->num_rows();
+        $row_cnt = $result->num_rows;
         $result->close();
         return $row_cnt != 0;
     }
