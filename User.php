@@ -25,9 +25,7 @@ class User extends Model{
         for($i=0;$i<count($room);$i++){
             $u = $room[$i];
             $usernames .= (':::' . $u['nick']);
-            error_log($u['nick'], 3, '/home/rose/Documents/temp/usernames.log');
         }
-        error_log($usernames, 3, '/home/rose/Documents/temp/usernames.log');
         return $usernames;
     }
 
