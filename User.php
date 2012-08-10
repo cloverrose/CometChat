@@ -1,54 +1,22 @@
 <?php
+require_once "Model.php";
 
-class User{
-    private $link;
-    private $name = 'user';
-
+class User extends Model{
     public function __construct(){
-        include "db_info.php";
-        $this->link = new mysqli($host, $username, $password, $dbname);
+        parent::__construct('user');
     }
 
-    public function __destruct(){
-        $this->link->close();
-    }
-
-    public function count(){
-        $sql = "SELECT COUNT(*) FROM $this->name;";
-        $result = $this->link->query($sql);
-        $row = $result->fetch_row();
-        $count = $row[0];
-        $result->close();
-        return $count;
-    }
-
-    public function get_pk($pk){
-        $sql = "SELECT * FROM $this->name WHERE pk = '$pk';";
-        $result = $this->link->query($sql);
-        if($row = $result->fetch_assoc()){
-            $user = array('pk' => $row['pk'],
-                          'room' => $row['room'],
-                          'nick' => $row['nick'],
-                          'dt' => $row['dt']);
-        }else{
-            $user = null;
-        }
-        $result->close();
-        return $user;   
+    protected function row2array($row){
+        return array('pk' => $row['pk'],
+                     'room' => htmlspecialchars($row['room'], ENT_QUOTES, 'UTF-8'),
+                     'nick' => htmlspecialchars($row['nick'], ENT_QUOTES, 'UTF-8'),
+                     'dt' => $row['dt']);
     }
 
     public function get_room($room){
         $sql = "SELECT * FROM $this->name WHERE room = '$room' ORDER BY dt;";
-        $result = $this->link->query($sql);
-        $users = array();
-        while($row = $result->fetch_assoc()){
-            $users[] = array('pk' => $row['pk'],
-                             'room' => $row['room'],
-                             'nick' => $row['nick'],
-                             'dt' => $row['dt']);
-        }
-        $result->close();
-        return $users;
+        $rets = $this->filter($sql);
+        return $rets;
     }
 
     public function get_usernames($room){
@@ -69,20 +37,6 @@ class User{
         $row_cnt = $result->num_rows;
         $result->close();
         return $row_cnt != 0;
-    }
-
-    public function select_dict(){
-        $sql = "SELECT * FROM $this->name ORDER BY dt;";
-        $result = $this->link->query($sql);
-        $users = array();
-        while($row = $result->fetch_assoc()) {
-            $users[] = array('pk' => $row['pk'],
-                             'room' => $row['room'],
-                             'nick' => $row['nick'],
-                             'dt' => $row['dt']);
-        }
-        $result->close();
-        return $users;
     }
   
     public function insert($room, $nick, $dt){
