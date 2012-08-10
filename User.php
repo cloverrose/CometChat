@@ -14,8 +14,9 @@ class User extends Model{
     }
 
     public function get_room($room){
-        $sql = "SELECT * FROM $this->name WHERE room = '$room' ORDER BY dt;";
-        $rets = $this->filter($sql);
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE room = ? ORDER BY dt");
+        $stmt->bind_param("s", $room);
+        $rets = $this->safefilter($stmt);
         return $rets;
     }
 
@@ -30,21 +31,28 @@ class User extends Model{
     }
 
     public function is_login($room, $nick){
-        $sql = "SELECT * FROM $this->name WHERE room = '$room' and nick = '$nick' ORDER BY dt;";
-        $result = $this->link->query($sql);
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE room = ? and nick = ? ORDER BY dt");
+        $stmt->bind_param("ss", $room, $nick);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $row_cnt = $result->num_rows;
         $result->close();
+        $stmt->close();
         return $row_cnt != 0;
     }
   
     public function insert($room, $nick, $dt){
-        $sql = "INSERT INTO $this->name (room, nick, dt) values ('$room', '$nick', '$dt');";
-        $this->link->query($sql);
+        $stmt = $this->link->prepare("INSERT INTO $this->name (room, nick, dt) values (?, ?, ?)");
+        $stmt->bind_param("sss", $room, $nick, $dt);
+        $stmt->execute();
+        $stmt->close();
     }
 
     public function delete($room, $nick){
-        $sql = "DELETE FROM $this->name WHERE room = '$room' and nick = '$nick';";
-        $this->link->query($sql);
+        $stmt = $this->link->prepare("DELETE FROM $this->name WHERE room = ? and nick = ?");
+        $stmt->bind_param("ss", $room, $nick);
+        $stmt->execute();
+        $stmt->close();
     }
 }
 ?>

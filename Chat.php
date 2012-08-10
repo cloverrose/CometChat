@@ -14,14 +14,17 @@ class Chat extends Model{
     }
 
     public function find_post($dt, $pre_pk){
-        $sql = "SELECT * FROM $this->name WHERE dt >= '$dt' and pk <> '$pre_pk' ORDER BY dt;";
-        $ret = $this->get($sql);
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE dt >= ? and pk <> ? ORDER BY dt");
+        $stmt->bind_param("si", $dt, $pre_pk);
+        $ret = $this->safeget($stmt);
         return $ret;
     }
 
     public function insert($nick, $words, $dt){
-        $sql = "INSERT INTO $this->name (nick, words, dt) values ('$nick', '$words', '$dt');";
-        $this->link->query($sql);
+        $stmt = $this->link->prepare("INSERT INTO $this->name (nick, words, dt) values (?, ?, ?)");
+        $stmt->bind_param("sss", $nick, $words, $dt);
+        $stmt->execute();
+        $stmt->close();
     }
 }
 ?>

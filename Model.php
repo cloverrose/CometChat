@@ -24,6 +24,21 @@ abstract class Model{
         return $count;
     }
 
+    protected function safeget($stmt){
+        // return first result
+        // if empty set return null
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($row = $result->fetch_assoc()){
+            $ret = $this->row2array($row);
+        }else{
+            $ret = null;
+        }
+        $result->close();
+        $stmt->close();
+        return $ret;
+    }
+
     protected function get($sql){
         // return first result
         // if empty set return null
@@ -35,6 +50,19 @@ abstract class Model{
         }
         $result->close();
         return $ret;
+    }
+
+    protected function safefilter($stmt){
+        // return all result
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rets = array();
+        while($row = $result->fetch_assoc()) {
+            $rets[] = $this->row2array($row);
+        }
+        $result->close();
+        $stmt->close();
+        return $rets;
     }
 
     protected function filter($sql){
@@ -55,13 +83,14 @@ abstract class Model{
     }
 
     public function get_pk($pk){
-        $sql = "SELECT * FROM $this->name WHERE pk = '$pk';";
-        $ret = $this->get($sql);
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE pk = ?");
+        $stmt->bind_param("i", $pk);
+        $ret = $this->safeget($stmt);
         return $ret;
     }
 
     public function select_dict(){
-        $sql = "SELECT * FROM $this->name ORDER BY dt;";
+        $sql = "SELECT * FROM $this->name ORDER BY dt, pk;";
         $ret = $this->filter($sql);
         return $ret;
    }
