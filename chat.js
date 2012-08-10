@@ -1,3 +1,9 @@
+var htmlEscape = (function(){
+  var map = {"<":"&lt;", ">":"&gt;", "&":"&amp;", "'":"&#39;", "\"":"&quot;", " ":"&nbsp;"};
+  var replaceStr = function(s){ return map[s]; };
+  return function(str) { return str.replace(/<|>|&|'|"|\s/g, replaceStr); };
+})();
+
 function onLoad() {
     Event.observe($("login_button"), "click", onLogin, false);
     Event.observe($("logout_button"), "click", onLogout, false);
@@ -34,6 +40,7 @@ function onRead(option) {
 
 function onLogin() {
     var username = $F("login_username");
+    var username_e = htmlEscape(username);
     var url = "login.php?username=" + encodeURIComponent(username);
     new Ajax.Request(url,
         {
@@ -41,7 +48,7 @@ function onLogin() {
             onComplete: function(request) {
                 $("read_timestamp").innerHTML = new Date() + 'login';
                 $("read_response").innerHTML = jparse(request.responseText, "read_response");
-                $("write_username").innerHTML = username + ": ";
+                $("write_username").innerHTML = username_e + ": ";
 		$("login_users").innerHTML = jparse(request.responseText, "login_users");
                 Field.clear("write_message");
                 Element.hide("login_form");
