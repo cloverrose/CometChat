@@ -20,6 +20,13 @@ class Chat extends Model{
         return $ret;
     }
 
+    public function get_max_pk(){
+        $sql = "SELECT * FROM $this->name ORDER BY pk DESC LIMIT 1;";
+        $ret = $this->get($sql);
+        $pk = $ret['pk'];
+        return $pk;
+    }
+
     public function insert($nick, $words, $dt){
         $stmt = $this->link->prepare("INSERT INTO $this->name (nick, words, dt) values (?, ?, ?)");
         $stmt->bind_param("sss", $nick, $words, $dt);

@@ -13,8 +13,10 @@ function create_smarty(){
 function create_output($room){
     $chat = new Chat();
     $speaks = $chat->select_dict();
+    $now = $chat->get_max_pk();
     $smarty = create_smarty();
     $smarty->assign('speaks', $speaks);
+    $smarty->assign('now', $now);
     $read_response =  $smarty->fetch('display.tpl');
 
     $user = new User();
