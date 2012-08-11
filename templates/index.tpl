@@ -15,11 +15,20 @@
         <title>Chat</title>
     </head>
 
-    <body>
+    <body onload="onLoad2()">
         <h1>Chat Entrance</h1>
-
+	
         <p>
         <a href="chat.html">ENTER</a>
         </p>
+
+	<span class="caption">Select room:</span>
+	<p id="roomlist"></p>
+
+	<form id="create_room_form" onSubmit="onCreateRoom(); return false;">
+	    <span class="caption">or create room:</span><br />
+            <input id="create_room" type="text" size="10" value="" />
+            <input id="create_room_button" type="button" value="Create" />
+        </form>	
     </body>
 </html>

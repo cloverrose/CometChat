@@ -13,6 +13,19 @@ class User extends Model{
                      'dt' => $row['dt']);
     }
 
+    public function get_roomlist(){
+        $sql = "SELECT * from $this->name;";
+        $rets = $this->filter($sql);
+        $roomlist = array();
+        for($i=0;$i<count($rets);$i++){
+            $r = $rets[$i]['room'];
+            if(! in_array($r, $roomlist)){
+                $roomlist[] = $r;
+            }
+        }
+        return $roomlist;        
+    }
+
     public function get_room($room){
         $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE room = ? ORDER BY dt");
         $stmt->bind_param("s", $room);

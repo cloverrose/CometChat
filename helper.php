@@ -25,6 +25,28 @@ function create_output($room){
                              "login_users" => $login_users));
 }
 
+function create_index(){
+    $smarty = create_smarty();
+    $out =  $smarty->fetch('index.tpl');
+    return $out;
+}
+
+function create_chat($room){
+    $smarty = create_smarty();
+    $smarty->assign('room', $room);
+    $out =  $smarty->fetch('chat.tpl');
+    return $out;
+}
+
+function create_roomlist(){
+    $user = new User();
+    $roomlist = $user->get_roomlist();
+    $smarty = create_smarty();
+    $smarty->assign('roomlist', $roomlist);
+    $out =  $smarty->fetch('roomlist.tpl');
+    return $out;
+}
+
 function comet_wait($room){
     $chat = new Chat();
     $user = new User();
@@ -41,6 +63,21 @@ function comet_wait($room){
         error_log($now_users, 3, '/home/rose/Documents/temp/now_users.log');
 
         if($now_len != $pre_len or $now_users != $pre_users){
+            break;
+        }
+    }
+}
+
+function comet_wait2(){
+    $user = new User();
+
+    $pre_rooms = $user->get_roomlist();
+    $pre = implode(':::', $pre_rooms);
+    while(true){
+        sleep(1);
+        $now_rooms = $user->get_roomlist();
+        $now = implode(':::', $now_rooms);
+        if($now != $pre){
             break;
         }
     }

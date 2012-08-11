@@ -8,6 +8,7 @@ function onLoad() {
     Event.observe($("login_button"), "click", onLogin, false);
     Event.observe($("logout_button"), "click", onLogout, false);
     Event.observe($("write_button"), "click", onWrite, false);
+    Element.hide("room_info");
     Element.hide("write_form");
     Element.hide("logout_form");
     Field.focus("login_username");
@@ -111,6 +112,43 @@ function onWrite() {
                 Element.show("write_form");
                 Element.show("logout_form");
                 Field.focus("write_message");
+            }
+        }
+    );
+}
+
+
+// for index.html
+
+function onLoad2() {
+    Event.observe($("create_room_button"), "click", onCreateRoom, false);
+    Field.focus("create_room");
+    onRead2("force");
+}
+
+function onRead2(option) {
+    var url = "roomlist.php?option=" + option;
+    new Ajax.Request(url,
+        {
+            method: "get",
+            onComplete: function(request) {
+                $("roomlist").innerHTML = request.responseText;
+		onRead2("wait");
+            }
+        }
+    );
+}
+
+function onCreateRoom() {
+    var room = $F("create_room");
+    var url = "createroom.php?room=" + encodeURIComponent(room);
+    new Ajax.Request(url,
+        {
+            method: "get",
+            onComplete: function(request) {
+                $("roomlist").innerHTML = request.responseText;
+                Field.clear("create_room");
+                Field.focus("create_room");
             }
         }
     );

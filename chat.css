@@ -36,3 +36,8 @@ body {
 span.now {
     color: Red;
 }
+
+#roomlist {
+    padding: 10px;
+    background-color: #eef;
+}

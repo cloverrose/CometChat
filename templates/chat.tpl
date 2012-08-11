@@ -16,7 +16,11 @@
     </head>
 
     <body onload="onLoad()">
-        <h1>Chat</h1>
+        <h1><a href="index.php">Chat</a></h1>
+
+	<form id="room_info">
+            <input id="login_room" type="text" size="10" value="{$room}" />
+        </form>
 
 	<h2>Login Users</h2>
 	<p id="login_users"></p>
@@ -24,7 +28,6 @@
 	<form id="login_form" onSubmit="onLogin(); return false;">
             <span class="caption">Enter username to login:</span>
             <input id="login_username" type="text" size="10" value="" />
-            <input id="login_room" type="text" size="10" value="" />
             <input id="login_button" type="button" value="Login" />
         </form>
 
