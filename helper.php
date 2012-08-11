@@ -12,8 +12,8 @@ function create_smarty(){
 
 function create_output($room){
     $chat = new Chat();
-    $speaks = $chat->select_dict();
-    $now = $chat->get_max_pk();
+    $speaks = $chat->filter_room($room);
+    $now = $chat->get_max_pk($room);
     $smarty = create_smarty();
     $smarty->assign('speaks', $speaks);
     $smarty->assign('now', $now);

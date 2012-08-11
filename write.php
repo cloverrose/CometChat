@@ -7,9 +7,10 @@ $chat = new Chat();
 $nick = $_GET["username"];
 $words = $_GET["message"];
 $pk = $_GET["pk"];
+$room = $_GET["room"];
 if($pk == 0){
     $pre_dt_str = '1970-01-01 00:00:01';
-    $post = $chat->find_post($pre_dt_str, $pk);
+    $post = $chat->find_post($pre_dt_str, $pk, $room);
     if(is_null($post)){
         $pre_dt_str = date('Y-m-d H:i:s');
         $post_dt_str =  date('Y-m-d H:i:s');
@@ -23,7 +24,7 @@ if($pk == 0){
 }else{
     $pre = $chat->get_pk($pk);
     $pre_dt_str = $pre['dt'];
-    $post = $chat->find_post($pre_dt_str, $pk);
+    $post = $chat->find_post($pre_dt_str, $pk, $room);
     if(is_null($post)){
         $post_dt_str =  date('Y-m-d H:i:s');
     }else{
@@ -34,7 +35,7 @@ if($pk == 0){
     $mid_dt = ($pre_dt + $post_dt) / 2;
     $dt = timestamp2str($mid_dt);
 }
-$chat->insert($nick, $words, $dt);
-$output = create_output('default');
+$chat->insert($nick, $words, $dt, $room);
+$output = create_output($room);
 echo $output;
 ?>

@@ -3,10 +3,11 @@ require_once('helper.php');
 
 if($_GET['option']){
     $option = $_GET['option'];
+    $room = $_GET['room'];
     if($option == 'wait'){
-        comet_wait('default');
+        comet_wait($room);
     }
-    $output = create_output('default');
+    $output = create_output($room);
     echo $output;
 }
 ?>

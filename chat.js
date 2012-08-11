@@ -24,7 +24,8 @@ function jparse(responseText, key){
     return obj;
 }
 function onRead(option) {
-    var url = "read.php?option="+option;
+    var room = $F("login_room");
+    var url = "read.php?option=" + option + "&room=" + encodeURIComponent(room);
     new Ajax.Request(url,
         {
             method: "get",
@@ -41,7 +42,8 @@ function onRead(option) {
 function onLogin() {
     var username = $F("login_username");
     var username_e = htmlEscape(username);
-    var url = "login.php?username=" + encodeURIComponent(username);
+    var room = $F("login_room");
+    var url = "login.php?username=" + encodeURIComponent(username) + "&room=" + encodeURIComponent(room);
     new Ajax.Request(url,
         {
             method: "get",
@@ -62,7 +64,8 @@ function onLogin() {
 
 function onLogout() {
     var username = $F("login_username");
-    var url = "logout.php?username=" + encodeURIComponent(username);
+    var room = $F("login_room");
+    var url = "logout.php?username=" + encodeURIComponent(username) + "&room=" + encodeURIComponent(room);
     new Ajax.Request(url,
         {
             method: "get",
@@ -85,6 +88,7 @@ function onLogout() {
 function onWrite() {
     var username = $F("login_username");
     var message = $F("write_message");
+    var room = $F("login_room");
     var pk = 0;
     var display_form = $("display_form");
     var radiolist = display_form.pk;
@@ -94,7 +98,7 @@ function onWrite() {
 	    break;
 	}
     }
-    var url = "write.php?username=" + encodeURIComponent(username) + "&message=" + encodeURIComponent(message) + "&pk=" + encodeURIComponent(pk);
+    var url = "write.php?username=" + encodeURIComponent(username) + "&message=" + encodeURIComponent(message) + "&pk=" + encodeURIComponent(pk) + "&room=" + encodeURIComponent(room);
     new Ajax.Request(url,
         {
             method: "get",
