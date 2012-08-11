@@ -35,10 +35,10 @@ class User extends Model{
 
     public function get_usernames($room){
         $room = $this->get_room($room);
-        $usernames = "";
+        $usernames = array();
         for($i=0;$i<count($room);$i++){
             $u = $room[$i];
-            $usernames .= (':::' . $u['nick']);
+            $usernames[] = $u['nick'];
         }
         return $usernames;
     }

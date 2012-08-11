@@ -20,7 +20,8 @@ function create_output($room){
     $read_response =  $smarty->fetch('display.tpl');
 
     $user = new User();
-    $login_users = $user->get_usernames($room);
+    $usernames = $user->get_usernames($room);
+    $login_users = implode(' ', $usernames);
     return json_encode(array("read_response" => $read_response,
                              "login_users" => $login_users));
 }
@@ -53,16 +54,14 @@ function comet_wait($room){
 
     $pre_len = $chat->count();
     $pre_users = $user->get_usernames($room);
-    error_log($pre_len, 3, '/home/rose/Documents/temp/pre_len.log');
-    error_log($pre_users, 3, '/home/rose/Documents/temp/pre_users.log');
+    $pre = implode(':::', $pre_users);
     while(true){
         sleep(1);
         $now_len = $chat->count();
         $now_users = $user->get_usernames($room);
-        error_log($now_len, 3, '/home/rose/Documents/temp/now_len.log');
-        error_log($now_users, 3, '/home/rose/Documents/temp/now_users.log');
+        $now = implode(':::', $now_users);
 
-        if($now_len != $pre_len or $now_users != $pre_users){
+        if($now_len != $pre_len or $now != $pre){
             break;
         }
     }
