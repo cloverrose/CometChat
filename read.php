@@ -1,7 +1,7 @@
 <?php
 require_once('helper.php');
 
-if($_GET['option']){
+if(isset($_GET['option']) and isset($_GET['room'])){
     $option = $_GET['option'];
     $room = $_GET['room'];
     if($option == 'wait'){
@@ -9,5 +9,7 @@ if($_GET['option']){
     }
     $output = create_output($room);
     echo $output;
+}else{
+    echo 'get parameter error';
 }
 ?>

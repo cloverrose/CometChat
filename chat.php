@@ -2,7 +2,7 @@
 
 require_once('helper.php');
 
-if($_GET['room']){
+if(isset($_GET['room'])){
     $room = $_GET['room'];
 }else{
     $room = 'default';
