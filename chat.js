@@ -4,6 +4,22 @@ var htmlEscape = (function(){
   return function(str) { return str.replace(/<|>|&|'|"|\s/g, replaceStr); };
 })();
 
+function cookie_user(){
+    if (window.navigator.cookieEnabled) {
+	if (document.cookie) {
+	    var cookies = document.cookie.split("; ");
+	    for (var i = 0; i < cookies.length; i++) {
+		var str = cookies[i].split("=");
+		if (str[0] == 'username') {
+		    var cookie_value = unescape(str[1]);
+		    $("login_username").value = cookie_value;
+		    onLogin();
+		}
+	    }
+	}
+    }
+}
+
 function onLoad() {
     Event.observe($("login_button"), "click", onLogin, false);
     Event.observe($("logout_button"), "click", onLogout, false);
@@ -13,6 +29,7 @@ function onLoad() {
     Element.hide("logout_form");
     Field.focus("login_username");
     onRead("force");
+    cookie_user();
 }
 
 function jparse(responseText, key){
