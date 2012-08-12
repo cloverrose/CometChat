@@ -39,7 +39,7 @@ class Chat extends Model{
 
     public function insert($nick, $words, $dt, $room, $mt){
         $stmt = $this->link->prepare("INSERT INTO $this->name (nick, words, dt, room, mt) values (?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssi", $nick, $words, $dt, $room, $mt);
+        $stmt->bind_param("sssss", $nick, $words, $dt, $room, $mt);
         $stmt->execute();
         $stmt->close();
     }
