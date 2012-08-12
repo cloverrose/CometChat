@@ -11,18 +11,19 @@ class Chat extends Model{
                      'nick' => htmlspecialchars($row['nick'], ENT_QUOTES, 'UTF-8'),
                      'words' => htmlspecialchars($row['words'], ENT_QUOTES, 'UTF-8'),
                      'dt' => $row['dt'],
-                     'room' => htmlspecialchars($row['room'], ENT_QUOTES, 'UTF-8'));
+                     'room' => htmlspecialchars($row['room'], ENT_QUOTES, 'UTF-8'),
+                     'mt' => $row['mt']);
     }
 
-    public function find_post($dt, $pre_pk, $room){
-        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE dt >= ? and pk <> ? and room = ? ORDER BY dt");
-        $stmt->bind_param("sis", $dt, $pre_pk, $room);
+    public function find_post($mt, $pre_pk, $room){
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE mt >= ? and pk <> ? and room = ? ORDER BY mt");
+        $stmt->bind_param("sis", $mt, $pre_pk, $room);
         $ret = $this->safeget($stmt);
         return $ret;
     }
 
     public function filter_room($room){
-        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE room = ? ORDER BY dt, pk");
+        $stmt = $this->link->prepare("SELECT * FROM $this->name WHERE room = ? ORDER BY mt, pk");
         $stmt->bind_param("s", $room);
         $rets = $this->safefilter($stmt);
         return $rets;
@@ -36,9 +37,9 @@ class Chat extends Model{
         return $pk;
     }
 
-    public function insert($nick, $words, $dt, $room){
-        $stmt = $this->link->prepare("INSERT INTO $this->name (nick, words, dt, room) values (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $nick, $words, $dt, $room);
+    public function insert($nick, $words, $dt, $room, $mt){
+        $stmt = $this->link->prepare("INSERT INTO $this->name (nick, words, dt, room, mt) values (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssi", $nick, $words, $dt, $room, $mt);
         $stmt->execute();
         $stmt->close();
     }

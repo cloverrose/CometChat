@@ -14,33 +14,31 @@ if(isset($_GET['username']) and isset($_GET['message'])
     $room = $_GET["room"];
 
     if($pk == 0){
-        $pre_dt_str = '1970-01-01 00:00:01';
-        $post = $chat->find_post($pre_dt_str, $pk, $room);
+        $pre_mt_str = $epoch;
+        $post = $chat->find_post($pre_mt_str, $pk, $room);
         if(is_null($post)){
-            $pre_dt_str = date('Y-m-d H:i:s');
-            $post_dt_str =  date('Y-m-d H:i:s');
+            $pre_mt_str = microtime2str(microtime()); // now
+            $post_mt_str = microtime2str(microtime()); // now
         }else{
-            $post_dt_str = $post['dt'];
+            $post_mt_str = $post['mt'];
         }
-        $pre_dt = str2timestamp($pre_dt_str);
-        $post_dt = str2timestamp($post_dt_str);
-        $mid_dt = ($pre_dt + $post_dt) / 2;
-        $dt = timestamp2str($mid_dt);
     }else{
         $pre = $chat->get_pk($pk);
-        $pre_dt_str = $pre['dt'];
-        $post = $chat->find_post($pre_dt_str, $pk, $room);
+        $pre_mt_str = $pre['mt'];
+        $post = $chat->find_post($pre_mt_str, $pk, $room);
         if(is_null($post)){
-            $post_dt_str =  date('Y-m-d H:i:s');
+            $post_mt_str = microtime2str(microtime()); // now
         }else{
-            $post_dt_str = $post['dt'];
+            $post_mt_str = $post['mt'];
         }
-        $pre_dt = str2timestamp($pre_dt_str);
-        $post_dt = str2timestamp($post_dt_str);
-        $mid_dt = ($pre_dt + $post_dt) / 2;
-        $dt = timestamp2str($mid_dt);
     }
-    $chat->insert($nick, $words, $dt, $room);
+    $pre_mt = $pre_mt_str;
+    $post_mt = $post_mt_str;
+    $mid_mt = bcdiv(bcadd($pre_mt, $post_mt), 2);
+    $mt = $mid_mt;
+    $dt = timestamp2str(microtime2timestamp($mt));
+
+    $chat->insert($nick, $words, $dt, $room, $mt);
     $output = create_output($room);
     echo $output;
 }else{
