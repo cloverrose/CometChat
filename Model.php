@@ -88,11 +88,5 @@ abstract class Model{
         $ret = $this->safeget($stmt);
         return $ret;
     }
-
-    public function select_dict(){
-        $sql = "SELECT * FROM $this->name ORDER BY dt, pk;";
-        $ret = $this->filter($sql);
-        return $ret;
-   }
 }
 ?>
